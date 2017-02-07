@@ -4,8 +4,6 @@ import (
   "syscall"
   "os"
   "os/exec"
-  "fmt"
-  "bufio"
 )
 
 type stationInfo struct {
@@ -44,18 +42,7 @@ func main() {
     }
   }("t", "t")
   //go startRadio(station.name, station.streamIpAddress)
- 
-  scanner := bufio.NewScanner(os.Stdin)
-    var text string
-    for text != "q" {  // break the loop if text == "q"
-        fmt.Print("Enter your text: ")
-        scanner.Scan()
-        text = scanner.Text()
 
-            fmt.Println("Your text was: ", text)
-        if text == "s" {
-            quit <- true
-            fmt.Println("Your text was: ", text)
-        }
-    }
+ <- quit
+ 
 }
