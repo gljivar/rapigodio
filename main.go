@@ -6,7 +6,7 @@ import (
 //  "errors"
   "regexp"
   //"syscall"
-  //"os"
+  "os"
   "os/exec"
   "fmt"
   "runtime"
@@ -23,6 +23,7 @@ var templates = template.Must(template.ParseFiles("index.html"))
 var playValidPath = regexp.MustCompile("^/(play)/(\\d)/*(.*)$")
 var quit chan bool
 var radios chan bool 
+var commands chan *exec.Cmd
 
 func startRadio(name string, streamIpAddress string) {
   //binary, _ := exec.LookPath("mplayer")
@@ -30,11 +31,14 @@ func startRadio(name string, streamIpAddress string) {
   //args := []string{streamIpAddress, "-really-quiet"}
 
   cmd := exec.Command("mplayer", streamIpAddress + " -really-quiet")
-  err := cmd.Run()
+  err := cmd.Start()
 
   if err != nil {
     fmt.Println(err)
   }
+
+  commands <- cmd
+
   //env := os.Environ()
 
   //syscall.Exec(binary, args, env)
@@ -69,13 +73,15 @@ func playHandler(w http.ResponseWriter, r *http.Request) {
     for {
       select {
       case <- quit:
-        fmt.Println("quit 1")
+        fmt.Println("quit 1" + station.name)
         <- radios
+        comm := <- commands
+        comm.Process.Signal(os.Kill)
         fmt.Println("quit 2")
         return
       default:
         if !started {
-          fmt.Println("default")
+          fmt.Println("default" + station.name)
           fmt.Println(radios)
           if len(radios) > 0 {
             fmt.Println("quitting " + string(len(radios)))
@@ -100,6 +106,7 @@ func main() {
   runtime.GOMAXPROCS(2)
   quit = make(chan bool, 3)
   radios = make(chan bool, 3)
+  commands = make(chan *exec.Cmd, 3)
   ww := make(chan bool)
   go func() {
   http.HandleFunc("/index/", indexHandler)
