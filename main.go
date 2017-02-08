@@ -102,6 +102,11 @@ func playHandler(w http.ResponseWriter, r *http.Request) {
   http.Redirect(w, r,  "/index/" + string(stationId) + "/" + stationName, http.StatusFound)
 }
 
+func stopHandler(w http.ResponseWriter, r *http.Request) {
+  quit <- true 
+  http.Redirect(w, r,  "/index/", http.StatusFound)
+}
+
 func main() {
   runtime.GOMAXPROCS(2)
   quit = make(chan bool, 3)
@@ -111,6 +116,7 @@ func main() {
   go func() {
   http.HandleFunc("/index/", indexHandler)
   http.HandleFunc("/play/", playHandler)
+  http.HandleFunc("/stop/", stopHandler)
   http.ListenAndServe(":8080", nil)
   }()
   <- ww
