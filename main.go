@@ -93,6 +93,11 @@ func playHandler(w http.ResponseWriter, r *http.Request) {
  
   fmt.Println("In play handler of " + station.Name)
 
+  if (radioStatus.NowPlaying.Id == station.Id) {
+    http.Redirect(w, r,  "/index/" + string(station.Id) + "/" + station.Name, http.StatusFound)
+    return
+  }
+
   go func() {
     started := false
     for {
