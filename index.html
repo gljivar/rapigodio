@@ -1,10 +1,13 @@
 <h1>rapigodio</h1>
 
-<p>[<a href="/play/1/Yammat">Yammat</a>]</p>
+<h2>Now playing: {{.NowPlaying.Name}}</h2>
 
-<p>[<a href="/play/2/Otvoreni">Otvoreni</a>]</p>
-
-<p>[<a href="/play/3/Czworka">Czworka</a>]</p>
+{{range .Stations}}
+<p>[<a href="/play/{{.Id}}/{{.Name}}">{{.Name}}</a>]</p>
+<p><img src="{{.IconAddress}}" />
+{{else}}
+No radio stations
+{{end}}
 
 <p>[<a href="/stop/">Stop</a>]</p>
 
