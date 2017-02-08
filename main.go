@@ -90,16 +90,7 @@ func playHandler(w http.ResponseWriter, r *http.Request) {
   fmt.Println(matchedPath[2])
   stationId, _ := strconv.Atoi(matchedPath[2])
   stationName := matchedPath[3]
-  var station StationInfo
-  if stationId == 2 {
-    station = StationInfo{Name: "otvoreni", StreamIpAddress: "http://50.7.129.122:8249/;"}  
-  } else if stationId == 1 {
-    station = StationInfo{Name: "yammat", StreamIpAddress: "http://192.240.102.133:12430/stream;"}  
-  } else if stationId == 3 {
-    station = StationInfo{Name: "cworka", StreamIpAddress: "http://stream3.polskieradio.pl:8956/;.mp3"}  
-  }
-
-  station = chooseById(radioStatus.Stations, stationId)
+  station := chooseById(radioStatus.Stations, stationId)
  
   fmt.Println("In play handler of " + stationName)
 
