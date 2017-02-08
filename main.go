@@ -98,39 +98,43 @@ func playHandler(w http.ResponseWriter, r *http.Request) {
     return
   }
 
-  go func() {
-    started := false
-    for {
-      select {
-      case <- quit:
-        fmt.Println("Quitting " + station.Name)
-        <- radios
-        comm := <- commands
-        comm.Process.Signal(os.Kill)
-        fmt.Println("Quit successful for " + station.Name)
-        return
-      default:
-        if !started {
-          fmt.Println("Starting " + station.Name)
-          if len(radios) > 0 {
-            fmt.Println("Sending quit signal. Currently running radios: " + string(len(radios)))
-            quit <- true
-          }
-          radios <- true 
-
-          fmt.Println("Starting to run radio after sending quit signals")
-          startRadio(station.Name, station.StreamIpAddress) 
-          fmt.Println("Radio " + station.Name + " started succesfully")
-        } 
-        started = true
-      }
-    }
-  }()
+  go play(station.Name, station.StreamIpAddress)
 
   radioStatus.NowPlaying = station 
   indexHandler(w, r)
   //http.Redirect(w, r,  "/index/" + string(stationId) + "/" + stationName, http.StatusFound)
 }
+
+func play(stationName string, streamIpAddress string) {
+  started := false
+  for {
+    select {
+    case <- quit:
+      fmt.Println("Quitting " + stationName)
+      <- radios
+      comm := <- commands
+      comm.Process.Signal(os.Kill)
+      fmt.Println("Quit successful for " + stationName)
+      return
+    default:
+      if !started {
+        fmt.Println("Starting " + stationName)
+        if len(radios) > 0 {
+          fmt.Println("Sending quit signal. Currently running radios: " + string(len(radios)))
+          quit <- true
+        }
+        radios <- true
+
+        fmt.Println("Starting to run radio after sending quit signals")
+        startRadio(stationName, streamIpAddress)
+
+        fmt.Println("Radio " + stationName + " started succesfully")
+      }
+      started = true
+    }
+  }
+}
+
 
 func stopHandler(w http.ResponseWriter, r *http.Request) {
   quit <- true 
@@ -162,7 +166,7 @@ func main() {
   http.HandleFunc("/index/", indexHandler)
   http.HandleFunc("/play/", playHandler)
   http.HandleFunc("/stop/", stopHandler)
-  http.ListenAndServe(":8080", nil)
+  http.ListenAndServe(":8081", nil)
   }()
   <- ww
 }
