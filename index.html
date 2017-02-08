@@ -3,12 +3,12 @@
 <h2>Now playing: {{.NowPlaying.Name}}</h2>
 
 {{range .Stations}}
-<p>[<a href="/play/{{.Id}}/{{.Name}}">{{.Name}}</a>]</p>
-<p><img src="{{.IconAddress}}" />
+<p><a href="/play/{{.Id}}/{{.Name}}">{{.Name}} <br /> <img src="{{.IconAddress}}" /></a></p>
 {{else}}
 No radio stations
 {{end}}
 
 <p>[<a href="/stop/">Stop</a>]</p>
 
-<img src="http://memeshappen.com/media/created/Hello-good-morning-meme-3201.jpg"/>
+
+<img src="{{if .NowPlaying.ImageAddress}}{{.NowPlaying.ImageAddress}}{{else}}http://memeshappen.com/media/created/Hello-good-morning-meme-3201.jpg{{end}}"/>

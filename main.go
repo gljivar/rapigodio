@@ -89,41 +89,38 @@ func playHandler(w http.ResponseWriter, r *http.Request) {
   matchedPath := playValidPath.FindStringSubmatch(r.URL.Path)
   fmt.Println(matchedPath[2])
   stationId, _ := strconv.Atoi(matchedPath[2])
-  stationName := matchedPath[3]
   station := chooseById(radioStatus.Stations, stationId)
  
-  fmt.Println("In play handler of " + stationName)
+  fmt.Println("In play handler of " + station.Name)
 
-  go func(name string, streamIpAddress string) {
+  go func() {
     started := false
     for {
       select {
       case <- quit:
-        fmt.Println("quit 1" + station.Name)
+        fmt.Println("Quitting " + station.Name)
         <- radios
         comm := <- commands
         comm.Process.Signal(os.Kill)
-        fmt.Println("quit 2")
+        fmt.Println("Quit successful for " + station.Name)
         return
       default:
         if !started {
-          fmt.Println("default" + station.Name)
-          fmt.Println(radios)
+          fmt.Println("Starting " + station.Name)
           if len(radios) > 0 {
-            fmt.Println("quitting " + string(len(radios)))
+            fmt.Println("Sending quit signal. Currently running radios: " + string(len(radios)))
             quit <- true
           }
           radios <- true 
 
-          fmt.Println("after ii default")
+          fmt.Println("Starting to run radio after sending quit signals")
           startRadio(station.Name, station.StreamIpAddress) 
-          fmt.Println("after default")
-          //http.Redirect(w, r,  "/index/" + stationId + "/" + stationName, http.StatusFound)
+          fmt.Println("Radio " + station.Name + " started succesfully")
         } 
         started = true
       }
     }
-  }("t", "t")
+  }()
 
   radioStatus.NowPlaying = station 
   indexHandler(w, r)
@@ -132,6 +129,7 @@ func playHandler(w http.ResponseWriter, r *http.Request) {
 
 func stopHandler(w http.ResponseWriter, r *http.Request) {
   quit <- true 
+  radioStatus.NowPlaying = StationInfo{}
   http.Redirect(w, r,  "/index/", http.StatusFound)
 }
 
