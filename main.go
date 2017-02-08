@@ -4,7 +4,6 @@ import (
   "html/template"
   "net/http"
   "regexp"
-  "os/exec"
   "fmt"
   "runtime"
   "strconv"
@@ -26,9 +25,6 @@ type RadioStatus struct {
 
 var templates = template.Must(template.ParseFiles("index.html"))
 var playValidPath = regexp.MustCompile("^/(play)/(\\d)/*(.*)$")
-var quit chan bool
-var radios chan bool 
-var commands chan *exec.Cmd
 var radioStatus RadioStatus = RadioStatus{}
 
 func indexHandler(w http.ResponseWriter, r *http.Request) {
@@ -76,7 +72,7 @@ func playHandler(w http.ResponseWriter, r *http.Request) {
     return
   }
 
-  go radio.Play(station.Name, station.StreamIpAddress, quit, radios, commands)
+  go radio.Play(station.Name, station.StreamIpAddress)
 
   radioStatus.NowPlaying = station 
   indexHandler(w, r)
@@ -84,7 +80,7 @@ func playHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func stopHandler(w http.ResponseWriter, r *http.Request) {
-  quit <- true 
+  radio.Quit()
   radioStatus.NowPlaying = StationInfo{}
   http.Redirect(w, r,  "/index/", http.StatusFound)
 }
@@ -105,9 +101,7 @@ func choose(ss []StationInfo, test func(StationInfo) bool) (ret []StationInfo) {
 
 func main() {
   runtime.GOMAXPROCS(2)
-  quit = make(chan bool, 3)
-  radios = make(chan bool, 3)
-  commands = make(chan *exec.Cmd, 3)
+  radio.Initialize()
   ww := make(chan bool)
   go func() {
   http.HandleFunc("/index/", indexHandler)

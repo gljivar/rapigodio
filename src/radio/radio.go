@@ -7,7 +7,17 @@ import (
   "os/exec"
 )
 
-func startRadio(name string, streamIpAddress string, commands chan *exec.Cmd) {
+var radios chan bool
+var quit chan bool
+var commands chan *exec.Cmd
+
+func Initialize() {
+  radios = make(chan bool, 3)
+  quit = make(chan bool, 3)
+  commands = make(chan *exec.Cmd, 3)
+}
+
+func startRadio(name string, streamIpAddress string) {
   //binary, _ := exec.LookPath("mplayer")
   //args := []string{"mplayer", streamIpAddress, "-really-quiet"}
   //args := []string{streamIpAddress, "-really-quiet"}
@@ -26,7 +36,7 @@ func startRadio(name string, streamIpAddress string, commands chan *exec.Cmd) {
   //syscall.Exec(binary, args, env)
 }
 
-func Play(stationName string, streamIpAddress string, quit chan bool, radios chan bool, commands chan *exec.Cmd) {
+func Play(stationName string, streamIpAddress string) {
   started := false
   for {
     select {
@@ -47,7 +57,7 @@ func Play(stationName string, streamIpAddress string, quit chan bool, radios cha
         radios <- true
 
         fmt.Println("Starting to run radio after sending quit signals")
-        startRadio(stationName, streamIpAddress, commands)
+        startRadio(stationName, streamIpAddress)
 
         fmt.Println("Radio " + stationName + " started succesfully")
       }
@@ -56,3 +66,6 @@ func Play(stationName string, streamIpAddress string, quit chan bool, radios cha
   }
 }
 
+func Quit() {
+  quit <- true
+}
