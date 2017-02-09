@@ -1,0 +1,30 @@
+[
+  {
+    "Id": 1,
+    "Name": "Yammat",
+    "StreamIpAddress": "http://192.240.102.133:12430/stream;",
+    "IconAddress": "https://thumbnailer.mixcloud.com/unsafe/128x128/profile/3/f/6/0/211e-ddbd-422b-9f89-d19ef718bb63.jpg",
+    "ImageAddress": "http://elelur.com/data_images/articles/happy-dogs-do-you-know-what-makes-them-really-so.jpg"
+  },
+  {
+    "Id": 2,
+    "Name": "Otvoreni",
+    "StreamIpAddress": "http://50.7.129.122:8249/;",
+    "IconAddress": "https://pbs.twimg.com/profile_images/821661264954986496/Uw-QUr9u_reasonably_small.jpg",
+    "ImageAddress": "http://i.imgur.com/FPiTgfC.jpg"
+  },
+  {
+    "Id": 3,
+    "Name": "Czworka",
+    "StreamIpAddress": "http://stream3.polskieradio.pl:8956/;.mp3",
+    "IconAddress": "http://player.polskieradio.pl/Content/_img/pr4-logo.png",
+    "ImageAddress": "https://larrycraven.files.wordpress.com/2011/02/happy-dog1.jpg"
+  },
+  {
+    "Id": 4,
+    "Name": "BBC 6",
+    "StreamIpAddress": "http://bbcmedia.ic.llnwd.net/stream/bbcmedia_6music_mf_p",
+    "IconAddress": "http://1.bp.blogspot.com/-nxf-VYZ5JTw/TzZWg4psx8I/AAAAAAAAAqM/0av78qhJ_WQ/s1600/bbcradio6.jpg",
+    "ImageAddress": "http://www.madewithhappy.com/wp-content/uploads/happy-dog2.jpg"
+  }
+]
