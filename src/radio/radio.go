@@ -22,7 +22,9 @@ func startRadio(name string, streamIpAddress string) {
   //args := []string{"mplayer", streamIpAddress, "-really-quiet"}
   //args := []string{streamIpAddress, "-really-quiet"}
 
-  cmd := exec.Command("mplayer", streamIpAddress + " -really-quiet")
+  fmt.Println("Streaming from ", streamIpAddress)
+
+  cmd := exec.Command("mplayer", streamIpAddress) // + " -really-quiet")
   err := cmd.Start()
 
   if err != nil {

@@ -8,6 +8,7 @@ import (
   "runtime"
   "strconv"
   "radio"
+  "flag"
 )
 
 type StationInfo struct {
@@ -47,6 +48,12 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
     StreamIpAddress: "http://stream3.polskieradio.pl:8956/;.mp3",
     IconAddress: "http://player.polskieradio.pl/Content/_img/pr4-logo.png",
     ImageAddress: "https://larrycraven.files.wordpress.com/2011/02/happy-dog1.jpg"})  
+  stations = append(stations, StationInfo{
+    Id: 4,
+    Name: "BBC 6",
+    StreamIpAddress: "http://bbcmedia.ic.llnwd.net/stream/bbcmedia_6music_mf_p",
+    IconAddress: "http://1.bp.blogspot.com/-nxf-VYZ5JTw/TzZWg4psx8I/AAAAAAAAAqM/0av78qhJ_WQ/s1600/bbcradio6.jpg",
+    ImageAddress: "http://www.madewithhappy.com/wp-content/uploads/happy-dog2.jpg"})
 
   if radioStatus.NowPlaying == (StationInfo{}) {
     radioStatus = RadioStatus{Stations: stations}
@@ -100,6 +107,9 @@ func choose(ss []StationInfo, test func(StationInfo) bool) (ret []StationInfo) {
 }
 
 func main() {
+  port := flag.Int("p", 8080, "Port") 
+  flag.Parse()
+
   runtime.GOMAXPROCS(2)
   radio.Initialize()
   ww := make(chan bool)
@@ -107,7 +117,11 @@ func main() {
   http.HandleFunc("/index/", indexHandler)
   http.HandleFunc("/play/", playHandler)
   http.HandleFunc("/stop/", stopHandler)
-  http.ListenAndServe(":8081", nil)
+
+  portString := strconv.Itoa(*port)
+  fmt.Println("Listening on port ", portString)
+  http.ListenAndServe(":" + portString, nil)
+
   }()
   <- ww
 }
