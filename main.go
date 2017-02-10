@@ -7,42 +7,18 @@ import (
   "fmt"
   "runtime"
   "strconv"
-  "radio"
+  "radio" 
   "flag"
-  "encoding/json"
-  "io/ioutil"
 )
 
-type StationInfo struct {
-  Id int
-  Name string
-  StreamIpAddress string
-  IconAddress string
-  ImageAddress string
-}
-
 type RadioStatus struct {
-  NowPlaying StationInfo
-  Stations []StationInfo
+  NowPlaying radio.StationInfo
+  Stations []radio.StationInfo
 } 
 
 var templates = template.Must(template.ParseFiles("index.html"))
 var playValidPath = regexp.MustCompile("^/(play)/(\\d)/*(.*)$")
 var radioStatus RadioStatus = RadioStatus{}
-
-func loadStations(filename string) ([]StationInfo) {
-  fileContent, err := ioutil.ReadFile(filename)
-  if err != nil {
-    panic(err) 
-  }
-  var stations []StationInfo 
-  if err := json.Unmarshal(fileContent, &stations); err != nil {
-    panic(err)
-  }
-  fmt.Println(stations)
-
-  return stations 
-}
 
 func indexHandler(w http.ResponseWriter, r *http.Request) {
   err := templates.ExecuteTemplate(w, "index.html", radioStatus)
@@ -56,7 +32,7 @@ func playHandler(w http.ResponseWriter, r *http.Request) {
   matchedPath := playValidPath.FindStringSubmatch(r.URL.Path)
   fmt.Println(matchedPath[2])
   stationId, _ := strconv.Atoi(matchedPath[2])
-  station := chooseById(radioStatus.Stations, stationId)
+  station := radio.ChooseById(radioStatus.Stations, stationId)
  
   fmt.Println("In play handler of " + station.Name)
 
@@ -74,22 +50,8 @@ func playHandler(w http.ResponseWriter, r *http.Request) {
 
 func stopHandler(w http.ResponseWriter, r *http.Request) {
   radio.Quit()
-  radioStatus.NowPlaying = StationInfo{}
+  radioStatus.NowPlaying = radio.StationInfo{}
   http.Redirect(w, r,  "/index/", http.StatusFound)
-}
-
-func chooseById(ss []StationInfo, id int) (StationInfo) {
-  allSatisfyingCondition := choose(ss, func(s StationInfo) bool { return s.Id == id })
-  return allSatisfyingCondition[0]
-}
-
-func choose(ss []StationInfo, test func(StationInfo) bool) (ret []StationInfo) {
-    for _, s := range ss {
-        if test(s) {
-            ret = append(ret, s)
-        }
-    }
-    return
 }
 
 func main() {
@@ -97,7 +59,7 @@ func main() {
   flag.Parse()
 
   filename := "stations.json"
-  radioStatus.Stations = loadStations(filename)
+  radioStatus.Stations = radio.LoadStations(filename)
 
   runtime.GOMAXPROCS(2)
   radio.Initialize()

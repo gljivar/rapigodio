@@ -7,6 +7,14 @@ import (
   "os/exec"
 )
 
+type StationInfo struct {
+  Id int
+  Name string
+  StreamIpAddress string
+  IconAddress string
+  ImageAddress string
+}
+
 var radios chan bool
 var quit chan bool
 var commands chan *exec.Cmd
