@@ -7,6 +7,11 @@ import (
   "os/exec"
 )
 
+type RadioStatus struct {
+  NowPlaying StationInfo
+  Stations []StationInfo
+}
+
 type StationInfo struct {
   Id int
   Name string
@@ -14,6 +19,8 @@ type StationInfo struct {
   IconAddress string
   ImageAddress string
 }
+
+var Status RadioStatus
 
 var radios chan bool
 var quit chan bool
@@ -23,6 +30,7 @@ func Initialize() {
   radios = make(chan bool, 3)
   quit = make(chan bool, 3)
   commands = make(chan *exec.Cmd, 3)
+  Status = RadioStatus{}
 }
 
 func startRadio(name string, streamIpAddress string) {
