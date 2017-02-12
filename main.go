@@ -9,17 +9,18 @@ import (
   "strconv"
   "radio" 
   "flag"
+  "encoding/json"
+  "log"
 )
 
 var templates = template.Must(template.ParseFiles("index.html"))
 var playValidPath = regexp.MustCompile("^/(play)/(\\d)/*(.*)$")
 
-func indexHandler(w http.ResponseWriter, r *http.Request) {
-  err := templates.ExecuteTemplate(w, "index.html", radio.Status)
-
-  if err != nil {
-    http.Error(w, err.Error(), http.StatusInternalServerError)
+func indexHandler(entryPoint string) func(w http.ResponseWriter, r *http.Request) {
+  fn := func(w http.ResponseWriter, r *http.Request) {
+    http.ServeFile(w, r, entryPoint)
   }
+  return http.HandlerFunc(fn)
 }
 
 func playHandler(w http.ResponseWriter, r *http.Request) {
@@ -38,7 +39,7 @@ func playHandler(w http.ResponseWriter, r *http.Request) {
   go radio.Play(station.Name, station.StreamIpAddress)
 
   radio.Status.NowPlaying = station 
-  indexHandler(w, r)
+  //indexHandler(w, r)
   //http.Redirect(w, r,  "/index/" + string(stationId) + "/" + stationName, http.StatusFound)
 }
 
@@ -48,8 +49,19 @@ func stopHandler(w http.ResponseWriter, r *http.Request) {
   http.Redirect(w, r,  "/index/", http.StatusFound)
 }
 
+func radioHandler(w http.ResponseWriter, r *http.Request) {
+  data, err := json.Marshal(radio.Status)
+  if err != nil {
+    http.Error(w, err.Error(), 400)
+  }
+  w.Write(data)
+}
+
 func main() {
-  port := flag.Int("p", 8080, "Port") 
+ 
+  entry := flag.String("entry", "./index.html", "Entrypoint")
+ // static := flag.String("static", ".", "Directory to serve static files from")
+  port := flag.Int("port", 8080, "Port") 
   flag.Parse()
 
   radio.Initialize()
@@ -60,13 +72,22 @@ func main() {
   runtime.GOMAXPROCS(2)
   ww := make(chan bool)
   go func() {
-  http.HandleFunc("/index/", indexHandler)
+
+  //var chttp = http.NewServeMux()
+
+  //chttp.Handle("/", http.FileServer(http.Dir("./")))
+
+ // http.Handle("/dist/", http.FileServer(http.Dir("./dist/")))
+  http.Handle("/dist/", http.StripPrefix("/dist/", http.FileServer(http.Dir("./dist/"))))
+
+  http.HandleFunc("/api/v1/radio", radioHandler);
+  http.HandleFunc("/index/", indexHandler(*entry))
   http.HandleFunc("/play/", playHandler)
   http.HandleFunc("/stop/", stopHandler)
 
   portString := strconv.Itoa(*port)
   fmt.Println("Listening on port ", portString)
-  http.ListenAndServe(":" + portString, nil)
+  log.Fatal(http.ListenAndServe(":" + portString, nil))
 
   }()
   <- ww

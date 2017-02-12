@@ -1,14 +1,13 @@
-<h1>rapigodio</h1>
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+    <meta charset="utf-8">
+    <title>Rapigodio</title>
+    <meta name="viewport" content="width=device-width" />
+  </head>
+  <body>
+    <div id="app"></div>
+    <script src="/dist/build.js"></script>
+  </body>
+</html>
 
-<h2>Now playing: {{.NowPlaying.Name}}</h2>
-
-{{range .Stations}}
-<p><a href="/play/{{.Id}}/{{.Name}}">{{.Name}} <br /> <img src="{{.IconAddress}}" /></a></p>
-{{else}}
-No radio stations
-{{end}}
-
-<p>[<a href="/stop/">Stop</a>]</p>
-
-
-<img src="{{if .NowPlaying.ImageAddress}}{{.NowPlaying.ImageAddress}}{{else}}http://memeshappen.com/media/created/Hello-good-morning-meme-3201.jpg{{end}}"/>
