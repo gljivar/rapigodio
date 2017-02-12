@@ -78,6 +78,7 @@ func main() {
   //chttp.Handle("/", http.FileServer(http.Dir("./")))
 
  // http.Handle("/dist/", http.FileServer(http.Dir("./dist/")))
+  //http.Handle("/dist/", http.StripPrefix("/dist/", http.FileServer(http.Dir("./dist/"))))
   http.Handle("/dist/", http.StripPrefix("/dist/", http.FileServer(http.Dir("./dist/"))))
 
   http.HandleFunc("/api/v1/radio", radioHandler);
