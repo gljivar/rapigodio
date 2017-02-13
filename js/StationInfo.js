@@ -26,8 +26,8 @@ export default class StationInfo extends Component {
 			<div class="stationInfo">
                        
 <h3 id={stationInfo.Id} onClick={this.onClick}>
-          {stationInfo.Name}
-        </h3>
+          {stationInfo.Name}</h3>
+          <br /> <img src={stationInfo.IconAddress} id={stationInfo.Id} onClick={this.onClick} />
  
                         <a href={"/play/" + stationInfo.Id + "/" + stationInfo.Name}>{stationInfo.Name}
                           <br /> <img src={stationInfo.IconAddress} /></a>
