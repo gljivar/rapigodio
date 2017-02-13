@@ -6,11 +6,11 @@ export default class StationInfo extends Component {
 	render({ stationInfo }) {
 		return (
 			<div class="stationInfo">
-po
-{stationInfo}
-{stationInfo.Id}
-{stationInfo.Name}
 					<div class="name">{stationInfo.Name}</div>
+                        <a href={"/play/" + stationInfo.Id + "/" + stationInfo.Name}>{stationInfo.Name}
+                          <br /> <img src={stationInfo.IconAddress} /></a>
+                       <p><a href="/play/{{stationInfo.Id}}/{{stationInfo.Name}}">{stationInfo.Name} <br /> <img src="{{stationInfo.IconAddress}}" /></a></p>
+
 			</div>
 		);
 	}
