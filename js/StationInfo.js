@@ -7,9 +7,10 @@ export default class StationInfo extends Component {
 		return (
 			<div class="stationInfo">
 po
-				<div class="vitals">
+{stationInfo}
+{stationInfo.Id}
+{stationInfo.Name}
 					<div class="name">{stationInfo.Name}</div>
-				</div>
 			</div>
 		);
 	}

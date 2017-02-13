@@ -1,0 +1,20 @@
+import { h, Component } from 'preact';
+import StationInfo from './StationInfo';
+
+export default class StationInfos extends Component {
+
+	render({ stationInfos }) {
+		return (
+			<div>
+koko
+{stationInfos.length}
+	<div class="station-infos">
+					{ stationInfos.map( (stationInfo, i) => (
+<div>posososososos</div>
+						<StationInfo key={stationInfo.Id} rank={i} item={stationInfo} />
+					)) }
+				</div>
+			</div>
+		);
+	}
+}

@@ -1,5 +1,5 @@
 import { h, Component } from 'preact';
-import StationInfo from './StationInfos';
+import StationInfo from './StationInfo';
 
 export default class StationInfos extends Component {
 
@@ -7,11 +7,10 @@ export default class StationInfos extends Component {
 		return (
 			<div>
 koko
-				<div class="station-infos">
-					{ stationInfos.map( (stationInfo, i) => (
-						<StationInfo key={stationInfo.Id} rank={i} item={stationInfo} />
-					)) }
-				</div>
+{stationInfos.map((stationInfo) => ( <div>
+<StationInfo stationInfo={stationInfo}/>
+X</div> ))}
+
 			</div>
 		);
 	}
