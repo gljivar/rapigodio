@@ -9,6 +9,8 @@ export default class App extends Component {
   constructor() {
     super();
     this.onClick = this.stopPlaying.bind(this);
+    this.handleChange = this.handleChange.bind(this);
+    this.loadStationInfos = this.loadStationInfos.bind(this);
   }
 
   state = { radioStatus: {
@@ -21,6 +23,10 @@ export default class App extends Component {
     fetch(`/stop/`)
     .then(asJson)
     .then(radioJson => this.setState({ radioStatus: radioJson }) );
+  }
+  
+  handleChange() {
+    this.loadStationInfos();
   }
 
   loadStationInfos() {
@@ -43,11 +49,11 @@ export default class App extends Component {
                  Stop 
                </h3>
    
-               <StationInfos stationInfos={radioStatus.Stations} />
+               <StationInfos stationInfos={radioStatus.Stations} handleChange={this.handleChange}/>
 
                <img src={radioStatus.NowPlaying.ImageAddress || "http://memeshappen.com/media/created/Hello-good-morning-meme-3201.jpg"} />
             </div>
 
-);
-    }
+    );
+  }
 }
