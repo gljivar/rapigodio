@@ -19,7 +19,6 @@ export default class StationInfos extends Component {
          <StationInfo stationInfo={stationInfo} handleChange={this.handleChange}/>
          </div> ))
         }
-        <a href="/stop/">Stop</a>
       </div>
      );
   }
