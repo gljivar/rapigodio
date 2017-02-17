@@ -43,17 +43,40 @@ export default class App extends Component {
   }
 
   render({ }, {radioStatus}) {
-    return (<div>
-               <div>Now playing: {radioStatus.NowPlaying.Name}</div>
-               <h3 id={radioStatus.NowPlaying.Id} onClick={this.onClick}>
-                 Stop 
-               </h3>
-   
+    return (
+           <div>
+             <nav class="navbar navbar-default">
+               <div class="container-fluid">
+                 <div class="navbar-header">
+                   <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                     <span class="sr-only">Toggle navigation</span>
+                     <span class="icon-bar"></span>
+                     <span class="icon-bar"></span>
+                     <span class="icon-bar"></span>
+                   </button>
+                   <a class="navbar-brand" href="#">Rapigodio</a>
+                 </div>
+
+                 <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                   <ul class="nav navbar-nav">
+                     <li><p class="navbar-text"><strong>{radioStatus.NowPlaying.Name}</strong></p></li>
+                   </ul>
+                   <ul class="nav navbar-nav navbar-right">
+                     <li><button class="btn btn-danger pull-right" type="button" id={radioStatus.NowPlaying.Id} onClick={this.onClick}>Stop</button></li>
+                   </ul>
+                 </div>
+               </div>
+             </nav>
+
+             <div class="container-fluid">
+               <div class="row"> 
                <StationInfos stationInfos={radioStatus.Stations} handleChange={this.handleChange}/>
-
-               <img src={radioStatus.NowPlaying.ImageAddress || "http://memeshappen.com/media/created/Hello-good-morning-meme-3201.jpg"} />
+               </div>
+               <div class="row">
+               <img src={radioStatus.NowPlaying.ImageAddress || "http://memeshappen.com/media/created/Hello-good-morning-meme-3201.jpg"} class="img-responsive img-rounded center-block"/>
+               </div>
             </div>
-
+          </div>
     );
   }
 }

@@ -15,7 +15,7 @@ export default class StationInfos extends Component {
   render({ stationInfos }) {
     return (
       <div>
-        {stationInfos.map((stationInfo) => ( <div>
+        {stationInfos.map((stationInfo) => ( <div class="col-xs-6">
          <StationInfo stationInfo={stationInfo} handleChange={this.handleChange}/>
          </div> ))
         }

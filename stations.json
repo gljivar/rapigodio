@@ -26,5 +26,12 @@
     "StreamIpAddress": "http://bbcmedia.ic.llnwd.net/stream/bbcmedia_6music_mf_p",
     "IconAddress": "http://1.bp.blogspot.com/-nxf-VYZ5JTw/TzZWg4psx8I/AAAAAAAAAqM/0av78qhJ_WQ/s1600/bbcradio6.jpg",
     "ImageAddress": "http://www.madewithhappy.com/wp-content/uploads/happy-dog2.jpg"
+  },
+  {
+    "Id": 5,
+    "Name": "Zapresic",
+    "StreamIpAddress": "http://s8.iqstreaming.com:8008/;",
+    "IconAddress": "http://cdn-radiotime-logos.tunein.com/s73331q.png",
+    "ImageAddress": "http://eukanuba.hr/wp-content/uploads/2016/06/6797614-happy-dog-wallpaper-hd.jpg"
   }
 ]

@@ -27,7 +27,7 @@ export default class StationInfo extends Component {
     return (
       <div class="stationInfo">
         <h3 id={stationInfo.Id} onClick={this.onClick}>{stationInfo.Name}</h3>
-        <img src={stationInfo.IconAddress} id={stationInfo.Id} onClick={this.onClick} />
+        <img class="img-thumbnail" src={stationInfo.IconAddress} id={stationInfo.Id} onClick={this.onClick} />
       </div>
     );
   }
